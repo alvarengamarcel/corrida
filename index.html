@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Corrida</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #000; /* Alterado para preto */
+            margin: 20px;
+        }
+
+        h1, h2 {
+            color: #000; /* Alterado para preto */
+            text-align: center;
+        }
+
+        input {
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+
+        .alvarenga-btn {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+        }
+
+        .jumbotron {
+            background-color: #007bff;
+            color: #fff;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .jumbotron h1,
+        .jumbotron p {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Calculadora de Corrida</h1>
+            <p>Calcule seu ritmo, tempo e velocidade média.</p>
+        </div>
+
+        <!-- Calculadora para calcular o Pace e Velocidade Média -->
+        <div>
+            <h2>Calcular Pace e Velocidade Média</h2>
+            <div class="form-group">
+                <label for="horas">Horas:</label>
+                <input type="text" class="form-control" id="horas" placeholder="0">
+            </div>
+            <div class="form-group">
+                <label for="minutos">Minutos:</label>
+                <input type="text" class="form-control" id="minutos" placeholder="00">
+            </div>
+            <div class="form-group">
+                <label for="segundos">Segundos:</label>
+                <input type="text" class="form-control" id="segundos" placeholder="00">
+            </div>
+            <div class="form-group">
+                <label for="distancia">Distância (km):</label>
+                <input type="text" class="form-control" id="distancia" placeholder="0.0">
+            </div>
+            <button class="btn btn-primary" onclick="calcularPace()">Calcular Pace</button>
+            <div class="result" id="paceResultado"></div>
+            <div class="result" id="velocidadeResultado"></div>
+        </div>
+
+        <!-- Calculadora para calcular o Tempo e Velocidade Média -->
+        <div class="mt-4">
+            <h2>Calcular Tempo e Velocidade Média</h2>
+            <div class="form-group">
+                <label for="pace">Pace (min/km):</label>
+                <input type="text" class="form-control" id="pace" placeholder="0:00">
+            </div>
+            <div class="form-group">
+                <label for="distancia2">Distância (km):</label>
+                <input type="text" class="form-control" id="distancia2" placeholder="0.0">
+            </div>
+            <button class="btn btn-primary" onclick="calcularTempo()">Calcular Tempo</button>
+            <div class="result" id="tempoResultado"></div>
+            <div class="result" id="velocidadeResultado2"></div>
+        </div>
+
+        <!-- Botão para redirecionar para Alvarenga Place -->
+        <div class="alvarenga-btn">
+            <a href="https://alvarengaplace.github.io/" target="_blank" class="btn btn-info">
+                Alvarenga Place <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit-id.js" crossorigin="anonymous"></script>
+    <script>
+        function calcularPace() {
+            var horas = parseInt(document.getElementById("horas").value) || 0;
+            var minutos = parseInt(document.getElementById("minutos").value) || 0;
+            var segundos = parseInt(document.getElementById("segundos").value) || 0;
+            var distanciaInput = parseFloat(document.getElementById("distancia").value) || 0;
+
+            var totalSegundos = horas * 3600 + minutos * 60 + segundos;
+            var paceSegundos = totalSegundos / distanciaInput;
+            var paceMinutos = Math.floor(paceSegundos / 60);
+            var paceSegundosRestantes = Math.round(paceSegundos % 60);
+
+            var velocidadeMedia = (3600 / paceSegundos).toFixed(2);
+
+            document.getElementById("paceResultado").innerHTML = "<strong>Pace:</strong> " + paceMinutos + ":" + (paceSegundosRestantes < 10 ? "0" : "") + paceSegundosRestantes + " min/km";
+            document.getElementById("velocidadeResultado").innerHTML = "<strong>Velocidade Média:</strong> " + velocidadeMedia + " km/h";
+        }
+
+        function calcularTempo() {
+            var paceInput = document.getElementById("pace").value;
+            var distanciaInput2 = parseFloat(document.getElementById("distancia2").value) || 0;
+
+            var paceArray = paceInput.split(":");
+            var paceMinutos = parseInt(paceArray[0]) || 0;
+            var paceSegundos = parseInt(paceArray[1]) || 0;
+
+            var paceTotalSegundos = paceMinutos * 60 + paceSegundos;
+            var tempoTotalSegundos = paceTotalSegundos * distanciaInput2;
+
+            var horas = Math.floor(tempoTotalSegundos / 3600);
+            var minutos = Math.floor((tempoTotalSegundos % 3600) / 60);
+            var segundos = Math.round(tempoTotalSegundos % 60);
+
+            var velocidadeMedia2 = (3600 / paceTotalSegundos).toFixed(2);
+
+            document.getElementById("tempoResultado").innerHTML = "<strong>Tempo:</strong> " + horas + "h " + (minutos < 10 ? "0" : "") + minutos + "min " + (segundos < 10 ? "0" : "") + segundos + "s";
+            document.getElementById("velocidadeResultado2").innerHTML = "<strong>Velocidade Média:</strong> " + velocidadeMedia2 + " km/h";
+        }
+    </script>
+</body>
+</html>
